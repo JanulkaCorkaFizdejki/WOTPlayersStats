@@ -1,9 +1,11 @@
 package model
 
 import DataModel.INTERNET_ACCESS
+import java.io.IOException
 import java.net.NetworkInterface
 import java.util.*
-
+import java.net.InetAddress
+import java.net.UnknownHostException
 
 
 class NetStatusObservable : NetworkObservable {
@@ -15,7 +17,6 @@ class NetStatusObservable : NetworkObservable {
     init {
         checkConnect()
     }
-
 
 
     override fun attach(networkObserver: NetworkObserver) {
@@ -59,7 +60,21 @@ class NetStatusObservable : NetworkObservable {
             while (eia.hasMoreElements()) {
                 val ia = eia.nextElement()
                 if (!ia.isAnyLocalAddress && !ia.isLoopbackAddress && !ia.isSiteLocalAddress) {
-                    if (ia.hostName != ia.hostAddress) return INTERNET_ACCESS.CONNECTION
+                    if (ia.hostName != ia.hostAddress) {
+                        try {
+                            val inetAddress: InetAddress = InetAddress.getByName("google.com")
+                            if  (inetAddress.isReachable(200)) {
+                                return INTERNET_ACCESS.CONNECTION
+                            } else { return INTERNET_ACCESS.NO_CONNECTION }
+                        } catch (ue: UnknownHostException) {
+                            println(ue)
+                            return INTERNET_ACCESS.NO_CONNECTION
+                        }
+                        catch (ioe: IOException) {
+                            println(ioe)
+                            return INTERNET_ACCESS.NO_CONNECTION
+                        }
+                    }
                 }
             }
         }
