@@ -8,6 +8,7 @@ object Colors {
 
 object WinTittles {
     const val Main: String = "World of Tanks - Player Statistics"
+    const val PlayersList: String = "Obserwowani gracze"
 }
 
 object URLS {
@@ -25,6 +26,6 @@ object DatabaseLocal {
     const val name: String = "wot_player_statistics.db"
     object tabels {
         const val players: String = "players"
-
+        const val init_players: String = "init_players"
     }
 }

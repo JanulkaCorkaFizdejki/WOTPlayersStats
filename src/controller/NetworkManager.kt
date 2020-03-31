@@ -70,19 +70,24 @@ class NetworkManager {
         }
 
         return PlayerPersonalData(
-                data.getInt("wins"),
-                data.getInt("draws"),
-                data.getInt("losses"),
+                data.getLong("wins"),
+                data.getLong("draws"),
+                data.getLong("losses"),
                 clan_tag,
                 clan_emblems,
                 clan_id as Int,
                 data.getInt("battle_avg_xp"),
-                data.getInt("frags"),
+                data.getLong("frags"),
                 data.getFloat("avg_damage_assisted"),
                 data.getInt("hits_percents"),
-                data.getInt("spotted"),
-                data.getInt("dropped_capture_points"),
-                data.getInt("capture_points")
+                data.getLong("spotted"),
+                data.getLong("dropped_capture_points"),
+                data.getLong("capture_points"),
+                data.getLong("damage_dealt"),
+                data.getLong("damage_received"),
+                data.getLong("survived_battles"),
+                data.getLong("xp"),
+                data.getDouble("tanking_factor")
         )
     }
 

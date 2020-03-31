@@ -23,6 +23,8 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import model.NetStatusObservable;
 import model.NetworkObserver;
+
+import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -60,6 +62,10 @@ public class Controller implements Initializable, NetworkObserver {
     public Label LBL_spotted;
     public Label LBL_dropped_capture_points;
     public Label LBL_capture_points;
+    public Label LBL_damage_dealt;
+    public Label LBL_damage_received;
+    public Label LBL_survived_battles;
+    public Label LBL_xp;
     NetStatusObservable netStatusObservable = null;
     private INTERNET_ACCESS internet_access = INTERNET_ACCESS.INIT;
     private NetworkManager networkManager = new NetworkManager();
@@ -67,6 +73,8 @@ public class Controller implements Initializable, NetworkObserver {
     public ProgressIndicator progressIndicatorBottom = new ProgressIndicator();
     private TableView tablePlayers = new TableView();
     private boolean isObservedPlayer = false;
+    private String clan_emblems_url = "";
+    private double tanking_factor = 0.0;
 
     ObservableList<Player> playerObservableList = FXCollections.observableArrayList();
     ObservableList<String> serverList = FXCollections.observableArrayList(
@@ -123,7 +131,7 @@ public class Controller implements Initializable, NetworkObserver {
 
         tablePlayers.setMinWidth(382.0);
         tablePlayers.setMaxWidth(382.0);
-        tablePlayers.setMinHeight(428.00);
+        tablePlayers.setMinHeight(450.00);
 
         PANE_playerBaseProperty.setVisible(false);
         LBL_add_delete_player_text.setVisible(false);
@@ -144,7 +152,7 @@ public class Controller implements Initializable, NetworkObserver {
                    LBL_battle_win.setText(String.valueOf(playerPersonalData.getWins()));
                    LBL_battle_draw.setText(String.valueOf(playerPersonalData.getDraws()));
                    LBL_battle_losses.setText(String.valueOf(playerPersonalData.getLossess()));
-                   int allBattle = playerPersonalData.getWins() + playerPersonalData.getDraws() + playerPersonalData.getLossess();
+                   long allBattle = playerPersonalData.getWins() + playerPersonalData.getDraws() + playerPersonalData.getLossess();
                    LBL_battle_all.setText(String.valueOf(allBattle));
                    LBL_battle_avg_xp.setText(String.valueOf(playerPersonalData.getBattle_avg_xp()));
                    LBL_frags.setText(String.valueOf(playerPersonalData.getFrags()));
@@ -153,15 +161,22 @@ public class Controller implements Initializable, NetworkObserver {
                    LBL_spotted.setText(String.valueOf(playerPersonalData.getSpotted()));
                    LBL_dropped_capture_points.setText(String.valueOf(playerPersonalData.getDropped_capture_points()));
                    LBL_capture_points.setText(String.valueOf(playerPersonalData.getCapture_points()));
+                   LBL_damage_dealt.setText(String.valueOf(playerPersonalData.getDamage_dealt()));
+                   LBL_damage_received.setText(String.valueOf(playerPersonalData.getDamage_received()));
+                   LBL_survived_battles.setText(String.valueOf(playerPersonalData.getSurvived_battles()));
+                   LBL_xp.setText(String.valueOf(playerPersonalData.getXp()));
+                   tanking_factor = playerPersonalData.getTanking_factor();
+
 
                    if (!playerPersonalData.getClanTag().equals("0") || !playerPersonalData.getClanEmblemsURL().equals("0")) {
-                       String imgSource = playerPersonalData.getClanEmblemsURL();
-                       Image emeblems = new Image(imgSource);
+                       clan_emblems_url = playerPersonalData.getClanEmblemsURL();
+                       Image emeblems = new Image(clan_emblems_url);
                        IMG_clanAvatar.setImage(emeblems);
                        LBL_clan_tag.setText(playerPersonalData.getClanTag());
                        LBL_id_clan.setText(String.valueOf(playerPersonalData.getClanID()));
                        GR_clanPane.setVisible(true);
-                   }
+                   } else { clan_emblems_url = ""; }
+
                    GR_bootom_loader.setVisible(false);
                }
                 LBL_playerName.setText(nickName);
@@ -302,6 +317,8 @@ public class Controller implements Initializable, NetworkObserver {
         if (isObservedPlayer) {
             String query = "DELETE FROM " + DatabaseLocal.tabels.players + " WHERE  id_account=" + id_account;
             databaseManager.delete(query);
+            query = "DELETE FROM " + DatabaseLocal.tabels.init_players + " WHERE  id_account=" + id_account;
+            databaseManager.delete(query);
             LBL_add_delete_player_text.setVisible(true);
             LBL_add_delete_player_text.setText("Gracz został usunięty z obserwowanych!");
             LBL_add_delete_player_text.setTextFill(Color.valueOf(Colors.REDhexff6059));
@@ -309,13 +326,44 @@ public class Controller implements Initializable, NetworkObserver {
         } else {
             String name = LBL_playerName.getText();
             int id_clan = 0;
+            String clan_tag = "";
             if (GR_clanPane.isVisible()) {
                 id_clan = Integer.parseInt(LBL_id_clan.getText());
+                clan_tag = LBL_clan_tag.getText();
             }
             String server_location = LBL_serverTag.getText();
+
             String query = "INSERT INTO " + DatabaseLocal.tabels.players + " (name, id_account, id_clan, server, time_add) " +
                     "VALUES ('" + name + "', " + id_account + ", " + id_clan + ", '" + server_location + "', datetime('now', 'localtime'))";
             databaseManager.insert(query);
+
+            // id_account
+            long wins = Long.parseLong(LBL_battle_win.getText());
+            long draws = Long.parseLong(LBL_battle_draw.getText());
+            long lossess = Long.parseLong(LBL_battle_losses.getText());
+            // String clan_tag
+           // clan_emblems_url
+            //  id_clan
+            long battle_avg_xp = Long.parseLong(LBL_battle_avg_xp.getText());
+            long frags = Long.parseLong(LBL_frags.getText());
+            double avg_damage_assisted = Double.parseDouble(LBL_avg_damage_assisted.getText());
+            int hits_percents = Integer.parseInt(LBL_hits_percents.getText());
+            long spotted = Long.parseLong(LBL_spotted.getText());
+            long dropped_capture_points = Long.parseLong(LBL_dropped_capture_points.getText());
+            long capture_points = Long.parseLong(LBL_capture_points.getText());
+            long damage_dealt = Long.parseLong(LBL_damage_dealt.getText());
+            long damage_received = Long.parseLong(LBL_damage_received.getText());
+            long survived_battles = Long.parseLong(LBL_survived_battles.getText());
+            long xp = Long.parseLong(LBL_xp.getText());
+
+            query = "INSERT INTO " + DatabaseLocal.tabels.init_players + " (id_account, wins, draws, lossess, clan_tag, clan_emblems_url, clan_id, battle_avg_xp, frags, avg_damage_assisted," +
+                    "hits_percents, spotted, dropped_capture_points, capture_points, damage_dealt, damage_received, survived_battles, xp, tanking_factor, insert_datetime) " +
+                    "VALUES (" + id_account + ", " + wins + ", " + draws + ", " + lossess + ", '" + clan_tag + "', '" + clan_emblems_url + "', " + id_clan + ", " + battle_avg_xp + ", " + frags + ", " + avg_damage_assisted +
+                    ", " + hits_percents + ", " + spotted + ", " + dropped_capture_points + ", " + capture_points + ", " + damage_dealt + ", " + damage_received +
+                    ", " + survived_battles + ", " + xp + ", " + tanking_factor + " , datetime('now', 'localtime'))";
+
+            databaseManager.insert(query);
+
             LBL_add_delete_player_text.setVisible(true);
             LBL_add_delete_player_text.setText("Gracz został dodany do obserwowanych!");
             LBL_add_delete_player_text.setTextFill(Color.valueOf(Colors.GREENhex28ca42));
@@ -328,7 +376,7 @@ public class Controller implements Initializable, NetworkObserver {
         int id_account =  Integer.parseInt(LBLaccountID.getText());
 
         DatabaseManager databaseManager = new DatabaseManager();
-        String query = "SELECT COUNT(id) AS count FROM " + DatabaseLocal.tabels.players + " WHERE id_account=" + id_account + " LIMIT 1";
+        String query = "SELECT COUNT(id_account) AS count FROM " + DatabaseLocal.tabels.players + " WHERE id_account=" + id_account + " LIMIT 1";
         ResultSet resultSet = databaseManager.select(query);
         if (resultSet.getInt("count") == 1) {
             Image image_eye = new Image("eye_looking.png");
@@ -345,5 +393,10 @@ public class Controller implements Initializable, NetworkObserver {
         }
         resultSet.close();
         databaseManager.closeConnection();
+    }
+
+    public void getFollowedPlayers(ActionEvent actionEvent) throws IOException {
+        ViewControllerPlayersList viewControllerPlayersList = new ViewControllerPlayersList();
+        viewControllerPlayersList.showView();
     }
 }

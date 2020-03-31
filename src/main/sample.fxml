@@ -8,11 +8,11 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controller">
+<GridPane alignment="center" hgap="10" prefHeight="620.0" prefWidth="800.0" vgap="10" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controller">
    <children>
-      <Pane prefHeight="600.0" prefWidth="800.0">
+      <Pane prefHeight="620.0" prefWidth="800.0">
          <children>
-            <Pane layoutY="563.0" prefHeight="39.0" prefWidth="800.0" style="-fx-background-color: #e6e6e6;">
+            <Pane layoutY="584.0" prefHeight="39.0" prefWidth="800.0" style="-fx-background-color: #e6e6e6;">
                <children>
                   <Group layoutX="657.0" layoutY="13.0">
                      <children>
@@ -46,10 +46,15 @@
             <MenuBar layoutY="1.0" prefHeight="25.0" prefWidth="800.0">
               <menus>
                 <Menu mnemonicParsing="false" text="File">
-                  <items>
+                 <items>
                     <MenuItem mnemonicParsing="false" text="Close" />
-                  </items>
-                </Menu>
+                 </items>
+              </Menu>
+                 <Menu mnemonicParsing="false" text="Gracze">
+                    <items>
+                       <MenuItem mnemonicParsing="false" text="Obserwowani gracze" onAction="#getFollowedPlayers"/>
+                    </items>
+                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                   <items>
                     <MenuItem mnemonicParsing="false" text="Delete" />
@@ -73,12 +78,12 @@
                   <Label layoutX="273.0" layoutY="13.0" text="Nazwa gracza:" />
                   <Pane fx:id="progressLoaderBox" layoutX="246.0" layoutY="40.0" prefHeight="20.0" prefWidth="20.0" />
                </children></Pane>
-            <Pane fx:id="PANE_table_playerListBox" layoutX="14.0" layoutY="126.0" prefHeight="428.0" prefWidth="394.0" />
-            <Pane fx:id="PANE_playerBaseProperty" layoutX="416.0" layoutY="126.0" prefHeight="428.0" prefWidth="373.0" style="-fx-border-color: #d1d2d4;">
+            <Pane fx:id="PANE_table_playerListBox" layoutX="14.0" layoutY="126.0" prefHeight="452.0" prefWidth="394.0" />
+            <Pane fx:id="PANE_playerBaseProperty" layoutX="416.0" layoutY="126.0" prefHeight="452.0" prefWidth="373.0" style="-fx-border-color: #d1d2d4;">
                <children>
                   <Group layoutY="32.0">
                      <children>
-                        <Label fx:id="LBL_playerName" alignment="CENTER" prefHeight="45.0" prefWidth="373.0" text="czacho_25" textAlignment="CENTER">
+                        <Label fx:id="LBL_playerName" alignment="CENTER" layoutY="-16.0" prefHeight="45.0" prefWidth="373.0" text="czacho_25" textAlignment="CENTER">
                            <padding>
                               <Insets bottom="5.0" top="5.0" />
                            </padding>
@@ -86,23 +91,45 @@
                               <Font name="System Bold" size="24.0" />
                            </font>
                         </Label>
-                        <Label fx:id="LBLaccountID" alignment="CENTER" layoutX="14.0" layoutY="32.0" prefHeight="17.0" prefWidth="344.0" text="111111111">
+                        <Label fx:id="LBLaccountID" alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="344.0" text="111111111">
                            <font>
                               <Font size="8.0" />
                            </font>
                         </Label>
                      </children>
                   </Group>
-                  <Group layoutX="93.0" layoutY="105.0">
+                  <Group layoutX="16.0" layoutY="78.0">
                      <children>
-                        <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="103.0" text="Liczba bitew:" />
-                        <Label alignment="CENTER_RIGHT" layoutY="17.0" prefHeight="17.0" prefWidth="103.0" text="Zwycięstwa:" />
-                        <Label alignment="CENTER_RIGHT" layoutY="35.0" prefHeight="17.0" prefWidth="103.0" text="Remisy:" />
-                        <Label alignment="CENTER_RIGHT" layoutY="51.0" prefHeight="17.0" prefWidth="103.0" text="Przegrane:" />
-                        <Label fx:id="LBL_battle_all" layoutX="123.0" prefHeight="17.0" prefWidth="118.0" text="0" />
-                        <Label fx:id="LBL_battle_win" layoutX="123.0" layoutY="17.0" prefHeight="17.0" prefWidth="118.0" text="0" />
-                        <Label fx:id="LBL_battle_draw" layoutX="123.0" layoutY="34.0" prefHeight="17.0" prefWidth="118.0" text="0" />
-                        <Label fx:id="LBL_battle_losses" layoutX="123.0" layoutY="52.0" prefHeight="17.0" prefWidth="118.0" text="0" />
+                        <Group layoutX="77.0">
+                           <children>
+                              <Label alignment="CENTER_RIGHT" layoutY="-4.0" prefHeight="17.0" prefWidth="103.0" text="Liczba bitew:" />
+                              <Label fx:id="LBL_battle_all" layoutX="123.0" layoutY="-4.0" prefHeight="17.0" prefWidth="118.0" text="0" />
+                           </children>
+                        </Group>
+                        <Group layoutX="77.0" layoutY="17.0">
+                           <children>
+                              <Label alignment="CENTER_RIGHT" layoutY="-4.0" prefHeight="17.0" prefWidth="103.0" text="Zwycięstwa:" />
+                              <Label fx:id="LBL_battle_win" layoutX="123.0" layoutY="-4.0" prefHeight="17.0" prefWidth="118.0" text="0" />
+                           </children>
+                        </Group>
+                        <Group layoutX="77.0" layoutY="34.0">
+                           <children>
+                              <Label alignment="CENTER_RIGHT" layoutY="-3.0" prefHeight="17.0" prefWidth="103.0" text="Remisy:" />
+                              <Label fx:id="LBL_battle_draw" layoutX="123.0" layoutY="-4.0" prefHeight="17.0" prefWidth="118.0" text="0" />
+                           </children>
+                        </Group>
+                        <Group layoutX="77.0" layoutY="51.0">
+                           <children>
+                              <Label alignment="CENTER_RIGHT" layoutY="-4.0" prefHeight="17.0" prefWidth="103.0" text="Przegrane:" />
+                              <Label fx:id="LBL_battle_losses" layoutX="123.0" layoutY="-3.0" prefHeight="17.0" prefWidth="118.0" text="0" />
+                           </children>
+                        </Group>
+                        <Group layoutY="69.0">
+                           <children>
+                              <Label alignment="CENTER_RIGHT" layoutY="-3.0" prefHeight="17.0" prefWidth="180.0" text="Przetrwanych bitew:" />
+                              <Label fx:id="LBL_survived_battles" layoutX="201.0" layoutY="-4.0" prefHeight="17.0" prefWidth="118.0" text="0" />
+                           </children>
+                        </Group>
                      </children>
                   </Group>
                   <Group fx:id="GR_clanPane" layoutX="6.0" layoutY="5.0">
@@ -120,32 +147,42 @@
                         </Label>
                      </children>
                   </Group>
-                  <Button fx:id="BTN_add_to_followed" layoutX="89.0" layoutY="354.0" mnemonicParsing="false" onAction="#onActionAddToFollowed" prefHeight="32.0" prefWidth="196.0" text="Dodaj do obserwowanych" textFill="WHITE">
+                  <Button fx:id="BTN_add_to_followed" layoutX="89.0" layoutY="394.0" mnemonicParsing="false" onAction="#onActionAddToFollowed" prefHeight="32.0" prefWidth="196.0" text="Dodaj do obserwowanych" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Button>
                   <Label fx:id="LBL_serverTag" alignment="CENTER_RIGHT" layoutX="310.0" layoutY="7.0" prefHeight="17.0" prefWidth="48.0" text="EU" />
-                  <Label fx:id="LBL_add_delete_player_text" alignment="CENTER" contentDisplay="CENTER" layoutX="6.0" layoutY="397.0" prefHeight="17.0" prefWidth="361.0" text="Gracz został dodany do listy obserwowanych!" textFill="#28ca42">
+                  <Label fx:id="LBL_add_delete_player_text" alignment="CENTER" contentDisplay="CENTER" layoutX="6.0" layoutY="429.0" prefHeight="17.0" prefWidth="361.0" text="Gracz został dodany do listy obserwowanych!" textFill="#28ca42">
                      <font>
-                        <Font name="System Bold" size="12.0" />
+                        <Font name="System Bold" size="11.0" />
                      </font>
                   </Label>
-                  <ImageView fx:id="IMG_eye" fitHeight="24.0" fitWidth="24.0" layoutX="174.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true" />
-                  <Label alignment="CENTER_RIGHT" layoutX="18.0" layoutY="174.0" prefHeight="17.0" prefWidth="180.0" text="Średnie doświadczenie na bitwę:" />
-                  <Label fx:id="LBL_battle_avg_xp" layoutX="216.0" layoutY="174.0" prefHeight="17.0" prefWidth="118.0" text="0" />
-                  <Label alignment="CENTER_RIGHT" layoutX="18.0" layoutY="193.0" prefHeight="17.0" prefWidth="180.0" text="Zniszczone pojazdy:" />
-                  <Label fx:id="LBL_frags" layoutX="216.0" layoutY="192.0" prefHeight="17.0" prefWidth="118.0" text="0" />
-                  <Label alignment="CENTER_RIGHT" layoutX="20.0" layoutY="212.0" prefHeight="17.0" prefWidth="180.0" text="Obrażenia po asyście:" />
-                  <Label fx:id="LBL_avg_damage_assisted" layoutX="217.0" layoutY="212.0" prefHeight="17.0" prefWidth="118.0" text="0" />
-                  <Label alignment="CENTER_RIGHT" layoutX="20.0" layoutY="230.0" prefHeight="17.0" prefWidth="180.0" text="Procent trafień:" />
-                  <Label fx:id="LBL_hits_percents" layoutX="217.0" layoutY="229.0" prefHeight="17.0" prefWidth="118.0" text="0" />
-                  <Label alignment="CENTER_RIGHT" layoutX="20.0" layoutY="247.0" prefHeight="17.0" prefWidth="180.0" text="Wykryte pojazdy:" />
-                  <Label fx:id="LBL_spotted" layoutX="218.0" layoutY="247.0" prefHeight="17.0" prefWidth="118.0" text="0" />
-                  <Label alignment="CENTER_RIGHT" layoutX="21.0" layoutY="266.0" prefHeight="17.0" prefWidth="180.0" text="Punkty obrony bazy:" />
-                  <Label fx:id="LBL_dropped_capture_points" layoutX="218.0" layoutY="267.0" prefHeight="17.0" prefWidth="118.0" text="0" />
-                  <Label alignment="CENTER_RIGHT" layoutX="21.0" layoutY="286.0" prefHeight="17.0" prefWidth="180.0" text="Punkty przejęcia bazy:" />
-                  <Label fx:id="LBL_capture_points" layoutX="219.0" layoutY="286.0" prefHeight="17.0" prefWidth="118.0" text="0" />
+                  <ImageView fx:id="IMG_eye" fitHeight="24.0" fitWidth="24.0" layoutX="174.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
+                  <Label alignment="CENTER_RIGHT" layoutX="20.0" layoutY="187.0" prefHeight="17.0" prefWidth="180.0" text="Średnie doświadczenie na bitwę:" />
+                  <Label fx:id="LBL_battle_avg_xp" layoutX="216.0" layoutY="187.0" prefHeight="17.0" prefWidth="118.0" text="0" />
+                  <Label alignment="CENTER_RIGHT" layoutX="20.0" layoutY="250.0" prefHeight="17.0" prefWidth="180.0" text="Zniszczone pojazdy:" />
+                  <Label fx:id="LBL_frags" layoutX="216.0" layoutY="249.0" prefHeight="17.0" prefWidth="118.0" text="0" />
+                  <Label alignment="CENTER_RIGHT" layoutX="20.0" layoutY="312.0" prefHeight="17.0" prefWidth="180.0" text="Obrażenia po asyście:" />
+                  <Label fx:id="LBL_avg_damage_assisted" layoutX="216.0" layoutY="312.0" prefHeight="17.0" prefWidth="118.0" text="0" />
+                  <Label alignment="CENTER_RIGHT" layoutX="18.0" layoutY="269.0" prefHeight="17.0" prefWidth="180.0" text="Procent trafień:" />
+                  <Label fx:id="LBL_hits_percents" layoutX="216.0" layoutY="269.0" prefHeight="17.0" prefWidth="118.0" text="0" />
+                  <Label alignment="CENTER_RIGHT" layoutX="20.0" layoutY="293.0" prefHeight="17.0" prefWidth="180.0" text="Wykryte pojazdy:" />
+                  <Label fx:id="LBL_spotted" layoutX="216.0" layoutY="293.0" prefHeight="17.0" prefWidth="118.0" text="0" />
+                  <Label alignment="CENTER_RIGHT" layoutX="20.0" layoutY="341.0" prefHeight="17.0" prefWidth="180.0" text="Punkty obrony bazy:" />
+                  <Label fx:id="LBL_dropped_capture_points" layoutX="216.0" layoutY="342.0" prefHeight="17.0" prefWidth="118.0" text="0" />
+                  <Label alignment="CENTER_RIGHT" layoutX="20.0" layoutY="361.0" prefHeight="17.0" prefWidth="180.0" text="Punkty przejęcia bazy:" />
+                  <Label fx:id="LBL_capture_points" layoutX="216.0" layoutY="361.0" prefHeight="17.0" prefWidth="118.0" text="0" />
+                  <Label alignment="CENTER_RIGHT" layoutX="17.0" layoutY="171.0" prefHeight="17.0" prefWidth="180.0" text="Doświadczenie:" />
+                  <Label fx:id="LBL_xp" layoutX="216.0" layoutY="170.0" prefHeight="17.0" prefWidth="118.0" text="0" />
+                  <Separator layoutX="28.0" layoutY="167.0" prefHeight="0.0" prefWidth="319.0" />
+                  <Separator layoutX="30.0" layoutY="209.0" prefHeight="0.0" prefWidth="319.0" />
+                  <Label alignment="CENTER_RIGHT" layoutX="20.0" layoutY="213.0" prefHeight="17.0" prefWidth="180.0" text="Zadane uszkodzenia:" />
+                  <Label fx:id="LBL_damage_dealt" layoutX="216.0" layoutY="213.0" prefHeight="17.0" prefWidth="118.0" text="0" />
+                  <Label alignment="CENTER_RIGHT" layoutX="20.0" layoutY="231.0" prefHeight="17.0" prefWidth="180.0" text="Otrzymane uszkodzenia:" />
+                  <Label fx:id="LBL_damage_received" layoutX="216.0" layoutY="231.0" prefHeight="17.0" prefWidth="118.0" text="0" />
+                  <Separator layoutX="28.0" layoutY="289.0" prefHeight="0.0" prefWidth="319.0" />
+                  <Separator layoutX="28.0" layoutY="337.0" prefHeight="0.0" prefWidth="319.0" />
                </children>
             </Pane>
    </children>

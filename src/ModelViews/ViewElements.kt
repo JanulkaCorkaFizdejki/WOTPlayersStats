@@ -7,12 +7,13 @@ import javafx.scene.control.Alert
 class WindowsType {
     companion object Main {
         val width: Double   = 800.0
-        val height: Double  = 600.0
+        val height: Double  = 620.0
 
         fun create(parent: Parent) : Scene {
              return Scene(parent, width, height)
         }
     }
+
 }
 
 class Alerts {
